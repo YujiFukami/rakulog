@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🗒 らくログ - 楽々作業日誌 Web版
 
-## Getting Started
+毎日の作業時間をかんたんに記録・集計できるWebアプリです。
 
-First, run the development server:
+**公開URL:** https://rakulog-5jx2edxji-yujifukamis-projects.vercel.app/input
+
+---
+
+## 主な機能
+
+| 機能 | 説明 |
+|------|------|
+| 出退勤記録 | ワンクリックで出勤・退勤時刻を記録 |
+| 作業記録 | 作業名をタップするだけで切り替え記録 |
+| 集計 | 期間を指定して作業別・日別に集計 |
+| 特定作業集計 | 特定の作業の月別・全期間カレンダー表示 |
+| 履歴編集 | 過去の作業時刻をあとから修正可能 |
+| 退勤忘れ対応 | 退勤し忘れた日を一覧表示して修正 |
+| 設定 | 作業マスタ管理・昼休み設定など |
+
+---
+
+## 画面の使い方
+
+### 入力画面（メイン）
+
+1. **出勤ボタン** を押すと出勤時刻が記録され、初期作業が自動開始されます
+2. 右側の作業一覧から作業名をタップすると、前の作業が終了して新しい作業が開始されます
+3. **退勤ボタン** を押すと進行中の作業が終了し、退勤時刻が記録されます
+4. 退勤後に再度作業を開始することも可能です（退勤ボタンで上書き確認あり）
+
+> スマホでは画面下部のタブで「最近の作業（15件）」「一覧」「今日の履歴」を切り替えられます
+
+---
+
+### 集計画面
+
+- 開始日・終了日を指定して期間集計
+- 作業別の合計時間をグラフで表示
+- 日付 × 作業名のクロス集計表
+
+---
+
+### 特定作業集計
+
+- 特定の作業名を選んで月別カレンダーで確認
+- **全期間モード**：その作業が存在する全月のカレンダーを一覧表示
+- 単価（円/h）を入力すると概算金額を自動計算
+
+---
+
+### 履歴編集
+
+- ナビの「履歴編集」または入力画面の「時刻を修正」リンクからアクセス
+- 日付を選択してその日の作業履歴を表示
+- 各作業の ✏ ボタンで開始時刻・終了時刻を修正できます
+- **開始時刻を変更すると前の作業の終了時刻が自動的に同じ値に更新されます**
+- 時刻の逆行・重複はバリデーションで防止されます
+
+---
+
+### 退勤忘れ対応
+
+- 過去30日間で退勤時刻が未登録の日を一覧表示
+- 「修正する」ボタンから退勤時刻・作業終了時刻をまとめて入力できます
+
+---
+
+### 設定
+
+- **出勤時開始作業名**：出勤ボタンを押したときに自動開始する作業を設定
+- **昼休み時間帯**：昼休みの開始・終了時刻を設定
+- **作業マスタ管理**：作業の追加・編集・無効化、カラー設定
+
+---
+
+## 技術スタック
+
+- **フロントエンド・バックエンド:** Next.js 16 (TypeScript)
+- **データベース:** Supabase (PostgreSQL)
+- **認証:** Supabase Auth
+- **スタイリング:** Tailwind CSS
+- **グラフ:** Recharts
+- **デプロイ:** Vercel
+
+---
+
+## 開発・セットアップ
 
 ```bash
+# リポジトリをクローン
+git clone https://github.com/YujiFukami/rakulog.git
+cd rakulog
+
+# 依存パッケージをインストール
+npm install
+
+# 環境変数を設定
+cp .env.local.example .env.local
+# .env.local に Supabase の URL と ANON KEY を記入
+
+# 開発サーバー起動
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 環境変数
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 開発者
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Softex-Celware**
+https://www.softex-celware.com/

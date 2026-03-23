@@ -4,7 +4,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { toHHMM, formatDateJP, todayStr, secToStr, diffSec } from '@/lib/utils'
 import type { WorkDay, WorkHistory, TaskMaster } from '@/types'
-import { Clock, LogIn, LogOut, Square, Plus, Search, Star, Check } from 'lucide-react'
+import { Clock, LogIn, LogOut, Square, Plus, Search, Star, Check, Pencil } from 'lucide-react'
+import Link from 'next/link'
 
 // ==========================================
 // 入力画面（メイン）
@@ -396,7 +397,15 @@ export default function InputPage() {
 
         {/* ===== 中: 今日の作業履歴 ===== */}
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">今日の履歴</h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">今日の履歴</h3>
+            <Link
+              href={`/history?date=${today}`}
+              className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 font-medium"
+            >
+              <Pencil size={11} /> 時刻を修正
+            </Link>
+          </div>
 
           {histories.length === 0 ? (
             <p className="text-sm text-gray-400 text-center py-8">まだ作業がありません</p>

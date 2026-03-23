@@ -11,12 +11,14 @@ import {
   Settings,
   AlertCircle,
   LogOut,
+  History,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
   { href: '/input',            label: '入力',     icon: ClipboardList },
   { href: '/aggregation',      label: '集計',     icon: BarChart2 },
   { href: '/task-aggregation', label: '特定作業', icon: BookOpen },
+  { href: '/history',          label: '履歴編集', icon: History },
   { href: '/forgotten',        label: '退勤忘れ', icon: AlertCircle },
   { href: '/settings',         label: '設定',     icon: Settings },
 ]
