@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -60,6 +61,21 @@ export default function Navigation() {
             <LogOut size={15} />
             ログアウト
           </button>
+          <a
+            href="https://www.softex-celware.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-3 pl-3 border-l border-gray-200 flex items-center hover:opacity-80 transition-opacity"
+            title="Softex-Celware 公式サイト"
+          >
+            <Image
+              src="/softex-celware-logo.png"
+              alt="Softex-Celware"
+              width={160}
+              height={44}
+              className="h-11 w-auto object-contain"
+            />
+          </a>
         </nav>
       </header>
 
@@ -80,6 +96,16 @@ export default function Navigation() {
               <span className="mt-0.5">{label}</span>
             </Link>
           ))}
+        </div>
+        <div className="flex justify-end pr-3 pb-1">
+          <a
+            href="https://www.softex-celware.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            Powered by Softex-Celware
+          </a>
         </div>
       </nav>
     </>

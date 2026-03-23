@@ -25,6 +25,7 @@ export default function InputPage() {
   const [actionLoading, setActionLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [now, setNow] = useState(new Date())
+  const [confirmClockOut, setConfirmClockOut] = useState(false)
 
   // 現在時刻を1分ごとに更新
   useEffect(() => {
@@ -154,8 +155,19 @@ export default function InputPage() {
 
   // ---- 退勤 ----
   const handleClockOut = async () => {
-    if (actionLoading || !workDay || workDay.clock_out) return
+    if (actionLoading || !workDay) return
+    // 既に退勤済みの場合は確認ダイアログを表示
+    if (workDay.clock_out) {
+      setConfirmClockOut(true)
+      return
+    }
+    await doClockOut()
+  }
+
+  const doClockOut = async () => {
+    if (!workDay) return
     setActionLoading(true)
+    setConfirmClockOut(false)
     try {
       const nowISO = new Date().toISOString()
       const timeStr = `${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}:00`
@@ -169,7 +181,7 @@ export default function InputPage() {
           .eq('history_id', activeHistory.history_id)
       }
 
-      // 退勤時刻を保存
+      // 退勤時刻を保存（上書き）
       await supabase
         .from('work_days')
         .update({ clock_out: timeStr, status: 'finished' })
@@ -209,6 +221,14 @@ export default function InputPage() {
       if (!user) return
 
       const nowISO = new Date().toISOString()
+
+      // 退勤済みの場合は退勤時刻をクリアして作業中に戻す
+      if (workDay.clock_out) {
+        await supabase
+          .from('work_days')
+          .update({ clock_out: null, status: 'working' })
+          .eq('work_day_id', workDay.work_day_id)
+      }
 
       // 進行中作業を終了
       if (activeHistory) {
@@ -264,6 +284,33 @@ export default function InputPage() {
 
   return (
     <div className="p-3 md:p-4 max-w-screen-xl mx-auto">
+      {/* 退勤上書き確認ダイアログ */}
+      {confirmClockOut && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-xl shadow-xl p-6 max-w-sm w-full mx-4 space-y-4">
+            <h3 className="text-base font-semibold text-gray-800">退勤時刻の上書き確認</h3>
+            <p className="text-sm text-gray-600">
+              既に退勤時刻が登録されています。<br />
+              現在時刻で上書きしてよろしいですか？
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmClockOut(false)}
+                className="flex-1 py-2 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50"
+              >
+                いいえ
+              </button>
+              <button
+                onClick={doClockOut}
+                className="flex-1 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600"
+              >
+                はい・上書き
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* トースト通知 */}
       {message && (
         <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white px-4 py-2 rounded-full text-sm shadow-lg">
@@ -328,7 +375,7 @@ export default function InputPage() {
             </button>
             <button
               onClick={handleClockOut}
-              disabled={actionLoading || !workDay || !!workDay.clock_out}
+              disabled={actionLoading || !workDay}
               className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium text-sm transition-colors
                 bg-orange-500 text-white hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed"
             >
